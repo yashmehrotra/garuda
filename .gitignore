@@ -5,6 +5,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Garuda - Django Project
+*.pyc
+
 # Distribution / packaging
 .Python
 env/
