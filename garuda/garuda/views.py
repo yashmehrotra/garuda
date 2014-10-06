@@ -71,10 +71,12 @@ def login_user(request):
         user_valid = validate_user(user_email, user_password)
         
         if user_valid['status'] == 'success':
+            
             request.session['user_id'] = user_valid['user_id']
             request.session['user_email'] = user_valid['user_email']
             request.session['user_handle'] = user_valid['user_handle']
             request.session['logged_in'] = True
+            
             response = {
                 'status':'success',
                 'email':request.session['user_email'],
@@ -101,8 +103,12 @@ def welcome_temp(request):
     }
     return render(request,'welcome.html',user_details)
 
-@login_required
 def logout(request):
+    # pdb.set_trace()
+
+    #Check if the user is logged in or not.
+    # Do not use @login_required
+    # If the user is not logged in , redirect him to the signup page or tell him that he is not logged in
     request.session.flush()
     request.session['logged_in'] = False
     request.session.modified = True
