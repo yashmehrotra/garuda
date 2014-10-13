@@ -115,3 +115,6 @@ def logout(request):
 
     response = 'logged out'
     return HttpResponse(json.dumps(response),content_type = "application/json")
+
+def dbms(request):
+    return render(request,'dbms.html')

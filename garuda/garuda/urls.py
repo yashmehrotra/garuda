@@ -12,5 +12,6 @@ urlpatterns = patterns('garuda.views',
     url(r'^loginuser/','login_user'),
     url(r'^welcome/','welcome_temp'),
     url(r'^logout/','logout'),
+    url(r'^dbms/','dbms'), # For Project Purposes
     url(r'^admin/', include(admin.site.urls)),
 )
