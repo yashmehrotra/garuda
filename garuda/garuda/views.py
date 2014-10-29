@@ -15,13 +15,12 @@ from django.core.context_processors import csrf
 
 from auth import *
 from settings import *
-from local_settings import *
 
 def about(request):
     return render(request,'about.html')
 
 def getDBObject():
-    db = MySQLdb.connect(MYSQL_HOST,MYSQL_USER,MYSQL_PASSWORD,GARUDA_DATABASE)
+    db = MySQLdb.connect(MYSQL_HOST,MYSQL_USERNAME,MYSQL_PASSWORD,MYSQL_DATABASE)
     return db
 
 def validate_user(user_email, user_password):
