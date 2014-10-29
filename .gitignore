@@ -7,6 +7,7 @@ __pycache__/
 
 # Garuda - Django Project
 *.pyc
+local_settings.py
 
 # Distribution / packaging
 .Python

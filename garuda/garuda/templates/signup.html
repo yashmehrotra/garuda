@@ -12,16 +12,17 @@
   function submit_form () {
     $.ajax({
       type:"POST",
-      url:"/loginuser/",
+      url:"/signupuser/",
       data:{
+        'user_name':$('#user-name').val(),
         'user_email':$('#user-email').val(),
-        'user_password':$('#user-password').val()
+        'user_password':$('#user-password').val(),
+        'user_handle':$('#user-handle').val()
       },
       success: function(result) {
         if(result) {
           console.log(result);
           if(result['status'] == 'success') {
-            console.log('redirect below');
             window.location.replace("/home/");
           }
         } else {
@@ -33,16 +34,15 @@
 
 </script>
 <body>
-  <h1>Please Enter you details</h1>
+  <h1>Signup Page<br>Please Enter you details</h1>
   <!-- <form  method="post"> -->
   <!-- ADD E.PREVENT DEFAULT STUFF AND REVERT IT BACK AS
   A FORM  -->
     {% csrf_token %}
+    <input type="text" name="user_name" placeholder="Name" class="form-group has-success has-feedback form-control login-form" id="user-name">
     <input type="email" name="user_email" placeholder="Email" class="form-group has-success has-feedback form-control login-form" id="user-email">
     <input type="password" name="user_password" placeholder="Password" class="form-group has-success has-feedback form-control login-form" id="user-password">
+    <input type="text" name="user_handle" placeholder="Handle" class="form-group has-success has-feedback form-control login-form" id="user-handle">
     <button onclick="submit_form()">Submit</button>
   <!-- </form> -->
-  <div id='signup'>
-    <button><a href="/signup">Click Here</a></button> to sign up!
-  </div>
 </body>

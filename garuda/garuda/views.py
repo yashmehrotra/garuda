@@ -96,12 +96,13 @@ def login_user(request):
     return HttpResponse(json.dumps(response),content_type = "application/json")
 
 @login_required
-def welcome_temp(request):
+def home_page(request):
+
     user_details = {
         'user_handle':request.session['user_handle'],
         'user_email':request.session['user_email']
     }
-    return render(request,'welcome.html',user_details)
+    return render(request,'home.html',user_details)
 
 def logout(request):
     # pdb.set_trace()
@@ -118,3 +119,9 @@ def logout(request):
 
 def dbms(request):
     return render(request,'dbms.html')
+
+def signup(request):
+    return render(request,'signup.html')
+
+def signupuser(request):
+    pass
