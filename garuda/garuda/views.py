@@ -97,7 +97,7 @@ def login_user(request):
 
 @login_required
 def home_page(request):
-    user_tweets = get_user_tweets()
+    #user_tweets = get_user_tweets()  - Uncomment when get_user_tweets is ready
     user_details = {
         'user_handle':request.session['user_handle'],
         'user_email':request.session['user_email']
@@ -141,4 +141,7 @@ def get_user_tweets():
 
     for row in rows:
         # get tweets here
+        pass
+
+    return tweets
     
