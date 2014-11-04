@@ -97,7 +97,7 @@ def login_user(request):
 
 @login_required
 def home_page(request):
-
+    user_tweets = get_user_tweets()
     user_details = {
         'user_handle':request.session['user_handle'],
         'user_email':request.session['user_email']
@@ -125,3 +125,20 @@ def signup(request):
 
 def signupuser(request):
     pass
+
+def get_user_tweets():
+    
+    user_handle = request.session['user_handle']
+
+    db = getDBObject()
+    cursor = db.cursor()
+    #sql_statement = ""   -- SELECT tweets for the corresponding user_handle , or user_id 
+    cursor.execute(sql_statement)
+    row = cursor.fetchall()
+    db.close()
+
+    tweets = []
+
+    for row in rows:
+        # get tweets here
+    
