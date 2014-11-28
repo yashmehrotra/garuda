@@ -20,7 +20,7 @@ def about(request):
     return render(request,'about.html')
 
 def getDBObject():
-    db = MySQLdb.connect(MYSQL_HOST,MYSQL_USERNAME,MYSQL_PASSWORD,MYSQL_DATABASE)
+    db = MySQLdb.connect(MYSQL_HOST,MYSQL_USERNAME,MYSQL_PASSWORD,'test')
     return db
 
 def validate_user(user_email, user_password):
@@ -100,7 +100,8 @@ def home_page(request):
     #user_tweets = get_user_tweets()  - Uncomment when get_user_tweets is ready
     user_details = {
         'user_handle':request.session['user_handle'],
-        'user_email':request.session['user_email']
+        'user_email':request.session['user_email'],
+        'tweets':get_user_tweets()
     }
     return render(request,'home.html',user_details)
 
@@ -135,15 +136,20 @@ def signupuser(request):
 
         # Ethical
         user_password = hashlib.md5(user_password).hexdigest()
+        errors = []
         pdb.set_trace()
-        db = getDBObject()
-        cursor = db.cursor()
-        # Insert statement not working , Jasdeep to fix
-        sql_statement = "INSERT INTO users (`user_email`,`user_name`,`user_password`,`user_handle`,`user_bio`) VALUES ('%s','%s','%s','%s','%s')" % (str(user_email),str(user_name),str(user_password),str(user_handle),str(user_bio))
-        cursor.execute(sql_statement)
+        try:
+            db = getDBObject()
+            cursor = db.cursor()
+            # Insert statement not working , Jasdeep to fix
+            sql_statement = "INSERT INTO users (user_email,user_name,user_password,user_handle,user_bio) VALUES ('%s', '%s', '%s', '%s', '%s') " % (str(user_email),str(user_name),str(user_password),str(user_handle),str(user_bio))
+            cursor.execute(sql_statement)
         
-        db.commit()
-        db.close()
+            db.commit()
+            db.close()
+
+        except MySQLdb.Error, e:
+            errors.append(str(e))
 
         user_valid = validate_user(user_email, user_password)
         
