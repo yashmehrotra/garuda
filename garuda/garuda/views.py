@@ -149,15 +149,20 @@ def signupuser(request):
         try:
             db = getDBObject()
             cursor = db.cursor()
+
             # Improve the below shit into something good looking
-            sql_statement = """INSERT INTO users (user_email,user_name,user_password,user_handle,user_bio) VALUES (%s, %s, %s, %s, %s) """
+            sql_statement = "INSERT INTO users (user_email,user_name,user_password,user_handle,user_bio) VALUES (%s, %s, %s, %s, %s)"
 
             vals = (str(user_email),str(user_name),str(user_password),str(user_handle),str(user_bio))
-            cursor.execute(sql_statement,vals)
-        
+            cursor.execute(sql_statement, vals)
+            
+            user_id = cursor.lastrowid
+            
             db.commit()
             db.close()
 
+            create_user_table(user_id)
+        
         except MySQLdb.Error, e:
             errors.append(str(e))
 
@@ -170,10 +175,10 @@ def signupuser(request):
         
         if user_valid['status'] == 'success':
             
-            request.session['user_id'] = user_valid['user_id']
-            request.session['user_email'] = user_valid['user_email']
+            request.session['user_id']     = user_valid['user_id']
+            request.session['user_email']  = user_valid['user_email']
             request.session['user_handle'] = user_valid['user_handle']
-            request.session['logged_in'] = True
+            request.session['logged_in']   = True
             
             response = {
                 'status':'success',
@@ -219,13 +224,35 @@ def get_user_tweets(request):
 
 def post_tweet(request):
 
+    errors = []
+
     if request.method == "POST":
         
         tweet_value = request.POST.get('tweet_value')
         tags        = re.findall(r"#(\w+)", tweet_value)      # The tag extractor - Epic Shit
         post_time   = datetime.now()
 
-        # Add the above in the user_x_table
+        user_id = request.session['user_id']
+
+        try:
+            db = getDBObject()
+            cursor = db.cursor()
+            table = 'user_' + str(user_id)
+
+            query = "INSERT INTO {0} (tweet_value, tags, post_time) VALUES ({1}, {2}, {3})".format(tweet_value, tags, post_time)
+            cursor.execute(query)
+
+            db.commit()
+            db.close()
+
+        except MySQLdb.Error, e:
+            errors.append(str(e))
+
+        if not errors:
+            response = {
+                'status':'success',
+                'message':'Tweet successfully added',
+            }
 
     else:
         response = {
@@ -240,6 +267,34 @@ def see_followers(request):
     pass
 
 # Also start create group etc, like , star
+
+def create_user_table(user_id):
+    
+    #pdb.set_trace()
+    errors = []
+    
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+        user_id = 'user_' + str(user_id)
+
+        # For creating user table for tweets
+        query = "CREATE TABLE IF NOT EXISTS {0} (`tweet_id` int(11) NOT NULL AUTO_INCREMENT,`tweet_value` text NOT NULL,`starred_by` text,`tags` text,`post_time` datetime NOT NULL,`hide` int(1) NOT NULL DEFAULT '0' COMMENT '0-show , 1 - hide',`spam_count` int(11) NOT NULL DEFAULT '0',`group_tweet` int(11) NOT NULL DEFAULT '0' COMMENT '0-no , 1 yes',PRIMARY KEY (`tweet_id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1".format(user_id)
+        cursor.execute(query)
+
+        # For creating user table followers
+        user_follow = user_id + '_follow'
+        
+        query = "CREATE TABLE IF NOT EXISTS {0} (`user_id` int(200) NOT NULL,`user_status` varchar(200) NOT NULL COMMENT 'follower - following our parent/following - our parent following the user') ENGINE=InnoDB DEFAULT CHARSET=latin1;".format(user_follow)
+        cursor.execute(query)
+
+        db.commit()
+        db.close
+
+    except MySQLdb.Error, e:
+        errors.append(e)
+
+
 
 
     
