@@ -206,14 +206,31 @@ def signupuser(request):
 def get_user_tweets(request):
     
     user_handle = request.session['user_handle']
-    user_id = 
+    user_id = request.session['user_id']
 
-    db = getDBObject()
-    cursor = db.cursor()
-    sql_statement = "SELECT * FROM " 
-    #cursor.execute(sql_statement)
-    #row = cursor.fetchall()
-    #db.close()
+    table = 'user_' + user_id
+
+    errors = []
+
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+        sql_statement = "SELECT * FROM {0}".format(table) 
+        cursor.execute(sql_statement)
+        
+        rows = cursor.fetchall()
+
+        if rows:
+            for row in rows:
+                # Add rows here
+                pass
+
+            pass
+    
+        #db.close()
+
+    except MySQLdb.Error, e:
+        errors.append(e)
 
     tweets = []
 
@@ -221,13 +238,16 @@ def get_user_tweets(request):
         # get tweets here
         #pass
 
+    # get all the users that the parent follows
+    # append them to the user's tweet list -- seperate user's tweet from the tweet feed
+
     return tweets
 
 @csrf_exempt
 def post_tweet(request):
 
     errors = []
-    pdb.set_trace()
+    #pdb.set_trace()
 
     if request.method == "POST":
         
@@ -281,8 +301,9 @@ def create_user_table(user_id):
     
     try:
         db = getDBObject()
-        cursor = db.cursor()
         user_id = 'user_' + str(user_id)
+
+        cursor = db.cursor()
 
         # For creating user table for tweets
         query = "CREATE TABLE IF NOT EXISTS {0} (`tweet_id` int(11) NOT NULL AUTO_INCREMENT,`tweet_value` text NOT NULL,`starred_by` text,`tags` text,`post_time` datetime NOT NULL,`hide` int(1) NOT NULL DEFAULT '0' COMMENT '0-show , 1 - hide',`spam_count` int(11) NOT NULL DEFAULT '0',`group_tweet` int(11) NOT NULL DEFAULT '0' COMMENT '0-no , 1 yes',PRIMARY KEY (`tweet_id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1".format(user_id)
