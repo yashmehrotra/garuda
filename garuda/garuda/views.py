@@ -111,6 +111,7 @@ def home_page(request):
         'user_email':request.session['user_email'],
         'tweets':get_user_tweets(request)
     }
+    
     return render(request,'home.html',user_details)
 
 def logout(request):
@@ -320,4 +321,3 @@ def create_user_table(user_id):
 
     except MySQLdb.Error, e:
         errors.append(e)
-
