@@ -197,7 +197,7 @@ def signupuser(request):
         response = {
                 'status':'failed',
                 'reason':'Not a POST request'
-            }
+        }
 
     #pdb.set_trace()
 
@@ -206,10 +206,11 @@ def signupuser(request):
 def get_user_tweets(request):
     
     user_handle = request.session['user_handle']
+    user_id = 
 
     db = getDBObject()
     cursor = db.cursor()
-    #sql_statement = ""   -- SELECT tweets for the corresponding user_handle , or user_id 
+    sql_statement = "SELECT * FROM " 
     #cursor.execute(sql_statement)
     #row = cursor.fetchall()
     #db.close()
@@ -222,24 +223,27 @@ def get_user_tweets(request):
 
     return tweets
 
+@csrf_exempt
 def post_tweet(request):
 
     errors = []
+    pdb.set_trace()
 
     if request.method == "POST":
         
-        tweet_value = request.POST.get('tweet_value')
+        tweet_value = str(request.POST.get('tweet_value'))
         tags        = re.findall(r"#(\w+)", tweet_value)      # The tag extractor - Epic Shit
-        post_time   = datetime.now()
+        post_time   = str(datetime.now())
 
         user_id = request.session['user_id']
+        tags = json.dumps(tags)
 
         try:
             db = getDBObject()
             cursor = db.cursor()
             table = 'user_' + str(user_id)
 
-            query = "INSERT INTO {0} (tweet_value, tags, post_time) VALUES ({1}, {2}, {3})".format(tweet_value, tags, post_time)
+            query = "INSERT INTO %s (tweet_value, tags, post_time) VALUES ('%s', '%s', '%s')" % (table, tweet_value, tags, post_time)
             cursor.execute(query)
 
             db.commit()
@@ -252,6 +256,8 @@ def post_tweet(request):
             response = {
                 'status':'success',
                 'message':'Tweet successfully added',
+                'tweet':tweet_value,
+                'tags':tags
             }
 
     else:
@@ -294,7 +300,3 @@ def create_user_table(user_id):
     except MySQLdb.Error, e:
         errors.append(e)
 
-
-
-
-    

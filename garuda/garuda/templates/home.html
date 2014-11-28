@@ -2,6 +2,33 @@
 <!DOCTYPE HTML>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/bootstrap-min.css">
+<script type="text/javascript" src="{{ STATIC_URL }}javascripts/jquery-2.1.1.min.js"></script>
+<script type="text/javascript">
+  
+  function submit_form () {
+    console.log("Form Submitted");
+    
+    $.ajax({
+      type:"POST",
+      url:"/post_tweet/",
+      data:{
+        'tweet_value':$('#tweet').val()
+      },
+      success: function(result) {
+        if(result) {
+          console.log(result);
+          if(result['status'] == 'success') {
+            console.log('tweet');
+            //window.location.replace("/home/");
+          }
+        } else {
+          console.log('prob with ajax request');
+        }
+      }
+    });
+  }
+
+</script>
 <h1>Welcome</h1>
 <p>
   Your user details are - 
@@ -12,6 +39,7 @@
 </p>
 <div id="tweet-container">
     <textarea id="tweet" placeholder="Your Tweet Here ..." class="form-control" rows="4"></textarea> <!-- Make it fixed rows and columns -->
+    <button onclick="submit_form()">Submit</button>
     <div id="user-tweets">
         <!-- A for loop which shows all the tweets of the user-->
     </div>
