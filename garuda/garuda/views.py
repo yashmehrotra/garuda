@@ -7,7 +7,8 @@ import hashlib
 import urllib2
 import requests
 import pdb
-#from __future__ import print_function
+import re
+from datetime import datetime
 
 from django.http import * #(HttpResponse, HttpResponseRedirect)
 from django.shortcuts import render, redirect
@@ -21,7 +22,7 @@ def about(request):
     return render(request,'about.html')
 
 def test(request):
-    response = {'Hello':'yash'}
+    response = {'Hello':'Yash'}
     return HttpResponse(json.dumps(response),content_type = "application/json")
 
 def getDBObject():
@@ -100,11 +101,7 @@ def login_user(request):
             'error':'not a post request'
         }
 
-    #pdb.set_trace()
-
-    #return HttpResponse(json.dumps(response), content_type = "application/json")
     return HttpResponse(json.dumps(response),content_type = "application/json")
-    #return HttpResponse("HEllo")
 
 @login_required
 def home_page(request):
@@ -137,7 +134,7 @@ def signup(request):
 
 @csrf_exempt
 def signupuser(request):
-    #pdb.set_trace()
+
     if request.method == 'POST':
         user_email    = request.POST.get('user_email')
         user_name     = request.POST.get('user_name')
@@ -152,12 +149,10 @@ def signupuser(request):
         try:
             db = getDBObject()
             cursor = db.cursor()
-            # Insert statement not working , Jasdeep to fix
+            # Improve the below shit into something good looking
             sql_statement = """INSERT INTO users (user_email,user_name,user_password,user_handle,user_bio) VALUES (%s, %s, %s, %s, %s) """
 
             vals = (str(user_email),str(user_name),str(user_password),str(user_handle),str(user_bio))
-            #sql_statement = "INSERT INTO users (user_name) VALUES ('Yash M') "
-            #sql_statement = "INSERT users "
             cursor.execute(sql_statement,vals)
         
             db.commit()
@@ -165,6 +160,8 @@ def signupuser(request):
 
         except MySQLdb.Error, e:
             errors.append(str(e))
+
+        # Create user_id_table u fucktard
 
         #pdb.set_trace()
         user_valid = validate_user(user_email, user_password)
@@ -205,8 +202,8 @@ def get_user_tweets(request):
     
     user_handle = request.session['user_handle']
 
-    #db = getDBObject()
-    #cursor = db.cursor()
+    db = getDBObject()
+    cursor = db.cursor()
     #sql_statement = ""   -- SELECT tweets for the corresponding user_handle , or user_id 
     #cursor.execute(sql_statement)
     #row = cursor.fetchall()
@@ -219,4 +216,30 @@ def get_user_tweets(request):
         #pass
 
     return tweets
+
+def post_tweet(request):
+
+    if request.method == "POST":
+        
+        tweet_value = request.POST.get('tweet_value')
+        tags        = re.findall(r"#(\w+)", tweet_value)      # The tag extractor - Epic Shit
+        post_time   = datetime.now()
+
+        # Add the above in the user_x_table
+
+    else:
+        response = {
+            'failed':'Not a POST request'
+        }
+
+    return HttpResponse(json.dumps(response),content_type = "application/json")
+
+def see_followers(request):
+    # Create a html page
+    # Get all the Followers, and those who follow in a tab manner
+    pass
+
+# Also start create group etc, like , star
+
+
     
