@@ -30,7 +30,7 @@ def validate_user(user_email, user_password):
     try:
         db = getDBObject()
         cursor = db.cursor()
-        cursor.execute("SELECT user_id,handle FROM user_data WHERE email LIKE '%s' AND password LIKE '%s'" % (user_email, user_password))
+        cursor.execute("SELECT user_id,user_handle FROM users WHERE user_email LIKE '%s' AND password LIKE '%s'" % (user_email, user_password))
         row = cursor.fetchone()
         db.close()
 
@@ -123,8 +123,57 @@ def dbms(request):
 def signup(request):
     return render(request,'signup.html')
 
+@csrf_exempt
 def signupuser(request):
-    pass
+    
+    if request.method == 'POST':
+        user_email    = request.POST.get('user_email')
+        user_name     = request.POST.get('user_name')
+        user_password = request.POST.get('user_password')
+        user_handle   = request.POST.get('user_handle')
+        user_bio      = request.POST.get('user_bio')
+
+        # Ethical
+        user_password = hashlib.md5(user_password).hexdigest()
+        pdb.set_trace()
+        db = getDBObject()
+        cursor = db.cursor()
+        # Insert statement not working , Jasdeep to fix
+        sql_statement = "INSERT INTO users (`user_email`,`user_name`,`user_password`,`user_handle`,`user_bio`) VALUES ('%s','%s','%s','%s','%s')" % (str(user_email),str(user_name),str(user_password),str(user_handle),str(user_bio))
+        cursor.execute(sql_statement)
+        
+        db.commit()
+        db.close()
+
+        user_valid = validate_user(user_email, user_password)
+        
+        if user_valid['status'] == 'success':
+            
+            request.session['user_id'] = user_valid['user_id']
+            request.session['user_email'] = user_valid['user_email']
+            request.session['user_handle'] = user_valid['user_handle']
+            request.session['logged_in'] = True
+            
+            response = {
+                'status':'success',
+                'email':request.session['user_email'],
+                'user_id':request.session['user_id'],
+                'user_handle':request.session['user_handle']
+            }
+        
+        else:
+            response = {
+                'status':'failed',
+                'reason':user_valid['reason']
+            }
+
+    else:
+        response = {
+                'status':'failed',
+                'reason':'Not a POST request'
+            }
+
+    return HttpResponse(json.dumps(response),content_type = "application/json")
 
 def get_user_tweets():
     

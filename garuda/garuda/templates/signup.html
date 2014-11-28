@@ -9,6 +9,11 @@
 </head>
 <script type="text/javascript">
   
+  // Add validations in javascript only, no need to do them in the backend
+
+
+
+
   function submit_form () {
     $.ajax({
       type:"POST",
@@ -17,13 +22,16 @@
         'user_name':$('#user-name').val(),
         'user_email':$('#user-email').val(),
         'user_password':$('#user-password').val(),
-        'user_handle':$('#user-handle').val()
+        'user_handle':$('#user-handle').val(),
+        'user_bio':$('#user-bio').val()
       },
       success: function(result) {
         if(result) {
           console.log(result);
           if(result['status'] == 'success') {
             window.location.replace("/home/");
+          } else {
+            console.log("Some Problem with database entry");
           }
         } else {
           console.log('prob with ajax request');
@@ -43,6 +51,7 @@
     <input type="email" name="user_email" placeholder="Email" class="form-group has-success has-feedback form-control login-form" id="user-email">
     <input type="password" name="user_password" placeholder="Password" class="form-group has-success has-feedback form-control login-form" id="user-password">
     <input type="text" name="user_handle" placeholder="Handle" class="form-group has-success has-feedback form-control login-form" id="user-handle">
+    <input type="textarea" name="user_bio" placeholder="Tell us about yourself" class="form-group has-success has-feedback form-control login-form" id="user-bio">
     <button onclick="submit_form()">Submit</button>
   <!-- </form> -->
 </body>
