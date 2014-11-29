@@ -42,6 +42,12 @@
     <button onclick="submit_form()">Submit</button>
     <div id="user-tweets">
         <!-- A for loop which shows all the tweets of the user-->
+        {% for tweet in tweets %}
+        <p>
+          {{ tweet.tweet_value }}
+          <input type="text" placeholder="{{ tweet.post_time }}" />
+        </p>
+        {% endfor %}
     </div>
 </div>
 </html>

@@ -213,6 +213,8 @@ def get_user_tweets(request):
 
     errors = []
 
+    tweets = []
+
     try:
         db = getDBObject()
         cursor = db.cursor()
@@ -221,19 +223,36 @@ def get_user_tweets(request):
         
         rows = cursor.fetchall()
 
+        #pdb.set_trace()
+
         if rows:
             for row in rows:
-                # Add rows here
-                pass
+                tweet_id    = row[0]
+                tweet_value = row[1]
+                starred_by  = row[2]
+                tags        = row[3]
+                post_time   = row[4]
 
+                if not starred_by:
+                    starred_by = ''
+
+                tweets.append({
+                    'tweet_id':tweet_id,
+                    'tweet_value':tweet_value,
+                    'stars':len(starred_by),          # Fix
+                    'tags':json.loads(tags),
+                    'post_time':post_time
+                })
+
+        else:
+            # No rows return empty set
             pass
     
-        #db.close()
+        db.close()
 
     except MySQLdb.Error, e:
         errors.append(e)
 
-    tweets = []
 
     #for row in rows:
         # get tweets here
