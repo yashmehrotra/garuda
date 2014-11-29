@@ -29,27 +29,37 @@
   }
 
 </script>
-<h1>Welcome</h1>
-<p>
-  Your user details are - 
-  <br>
-  Your handle is {{ user_handle }}
-  <br>
-  Your email is {{ user_email }}
-</p>
-<div id="tweet-container">
-    <textarea id="tweet" placeholder="Your Tweet Here ..." class="form-control" rows="4"></textarea> <!-- Make it fixed rows and columns -->
-    <button onclick="submit_form()">Submit</button>
-    <div id="user-tweets">
-        <!-- A for loop which shows all the tweets of the user-->
-        {% for tweet in tweets %}
-        <p>
-          {{ tweet.tweet_value }}
-          <input type="text" placeholder="{{ tweet.post_time }}" />
-        </p>
-        {% endfor %}
-    </div>
-</div>
+<body>
+  <div class="header">
+    <ul class="header-list">
+      <a href="#" class="header-link">Home</a>
+      <a href="#" class="header-link">My Followers</a>
+      <a href="#" class="header-link">Following</a>
+      <a href="#" class="header-link">abc</a>
+    </ul>
+  </div>
+  <h1>Welcome</h1>
+  <p>
+    Your user details are - 
+    <br>
+    Your handle is {{ user_handle }}
+    <br>
+    Your email is {{ user_email }}
+  </p>
+  <div id="tweet-container">
+      <textarea id="tweet" placeholder="Your Tweet Here ..." class="form-control" rows="4"></textarea> <!-- Make it fixed rows and columns -->
+      <button onclick="submit_form()">Submit</button>
+      <div id="user-tweets">
+          <!-- A for loop which shows all the tweets of the user-->
+          {% for tweet in tweets %}
+          <p>
+            {{ tweet.tweet_value }}
+            <input type="text" placeholder="{{ tweet.post_time }}" />
+          </p>
+          {% endfor %}
+      </div>
+  </div>
+</body>
 </html>
 <!--
     Each time a tweet will be posted, the page should reload,
