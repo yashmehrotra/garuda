@@ -1,0 +1,47 @@
+{% load static from staticfiles %}
+<!DOCTYPE HTML>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/bootstrap-min.css">
+<script type="text/javascript" src="{{ STATIC_URL }}javascripts/jquery-2.1.1.min.js"></script>
+
+<script type="text/javascript">
+  
+  function submit_form () {
+    console.log("Form Submitted");
+    
+    $.ajax({
+      type:"POST",
+      url:"/add_follower/",
+      data:{
+        'user_to_follow':$('#user-to-follow').val()
+      },
+      success: function(result) {
+        if(result) {
+          console.log(result);
+          if(result['status'] == 'success') {
+            console.log('followed');
+          }
+        } else {
+          console.log('prob with ajax request');
+        }
+      }
+    });
+  }
+
+</script>
+<h1>Welcome</h1>
+<p>
+  Your user details are - 
+  <br>
+  Your handle is {{ user_handle }}
+  <br>
+  Your email is {{ user_email }}
+</p>
+<div id="give-it-one">
+  <input type="text" placeholder="Enter user_id you want to follow" id="user-to-follow">
+  <button onclick="submit_form()">Submit</button>
+</div>
+</html>
+<!--
+    Each time a tweet will be posted, the page should reload,
+-->

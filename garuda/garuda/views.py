@@ -301,6 +301,7 @@ def get_following_tweets(request):
     return tweets
 
 @csrf_exempt
+@login_required
 def post_tweet(request):
 
     errors = []
@@ -369,7 +370,7 @@ def create_user_table(user_id):
         # For creating user table followers
         user_follow = user_id + '_follow'
         
-        query = "CREATE TABLE IF NOT EXISTS {0} (`user_id` int(200) NOT NULL,`user_status` varchar(200) NOT NULL COMMENT 'follower - following our parent/following - our parent following the user') ENGINE=InnoDB DEFAULT CHARSET=latin1;".format(user_follow)
+        query = "CREATE TABLE IF NOT EXISTS {0} (`user_id` int(200) NOT NULL,`user_status` varchar(200) NOT NULL COMMENT 'follower - following our parent/following - our parent following the user', PRIMARY KEY (`user_id`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;".format(user_follow)
         cursor.execute(query)
 
         db.commit()
@@ -377,3 +378,57 @@ def create_user_table(user_id):
 
     except MySQLdb.Error, e:
         errors.append(e)
+
+@login_required
+def follow(request):
+    return render(request,'follow.html')
+
+@csrf_exempt
+@login_required
+def add_follower(request):
+
+    if request.method == 'POST':
+    
+        user_id = request.session['user_id']
+        user_to_follow = str(request.POST.get('user_to_follow'))
+
+        table_parent = 'user_' + user_id + '_follow'
+        table_following = 'user_' + user_to_follow + '_follow'
+
+        errors = []
+
+        try:
+            db = getDBObject()
+            cursor = db.cursor()
+
+            query = "INSERT INTO %s (user_id, user_status) VALUES ('%s', 'following') " % (table_parent, user_to_follow)
+            cursor.execute(query)
+
+            query = "INSERT INTO %s (user_id, user_status) VALUES ('%s', 'follower') " % (table_following, user_id)
+            cursor.execute(query)
+
+            db.commit()
+            db.close()
+
+        except MySQLdb.Error, e:
+            errors.append(str(e))
+
+        if not errors:
+            response = {
+                'status':'success',
+                'result':'{0} is following {1}'.format(user_id,user_to_follow)
+            }
+
+        else:
+            response = {
+                'status':'failed',
+                'error':errors
+            }
+
+    else:
+        response = {
+            'status':'failed',
+            'error':'Not a POST request'
+        }
+
+    return HttpResponse(json.dumps(response),content_type = "application/json")
