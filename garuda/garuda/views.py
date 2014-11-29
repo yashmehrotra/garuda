@@ -109,7 +109,7 @@ def home_page(request):
     user_details = {
         'user_handle':request.session['user_handle'],
         'user_email':request.session['user_email'],
-        'tweets':get_user_tweets(request)
+        'tweets':get_following_tweets(request)
     }
     
     return render(request,'home.html',user_details)
@@ -204,11 +204,8 @@ def signupuser(request):
 
     return HttpResponse(json.dumps(response),content_type = "application/json")
 
-def get_user_tweets(request):
+def get_user_tweets(user_id):
     
-    user_handle = request.session['user_handle']
-    user_id = request.session['user_id']
-
     table = 'user_' + user_id
 
     errors = []
@@ -260,6 +257,46 @@ def get_user_tweets(request):
 
     # get all the users that the parent follows
     # append them to the user's tweet list -- seperate user's tweet from the tweet feed
+
+    return tweets
+
+def get_following_tweets(request):
+
+    pdb.set_trace()
+    
+    user_id = request.session['user_id']
+    table = 'user_' + user_id + '_follow'
+
+    tweets = []
+    user_following = []
+
+    errors = []
+
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+
+        query = "SELECT user_id FROM {0} WHERE user_status LIKE 'following' ".format(table)
+
+        cursor.execute(query)
+
+        rows = cursor.fetchall()
+
+        if rows:
+            for row in rows:
+                following_id = str(row[0])
+
+                user_following.append(following_id)
+
+        else:
+            # Add exception
+            pass
+
+    except MySQLdb.Error, e:
+        errors.append(str(e))
+
+    for following in user_following:
+        tweets += get_user_tweets(following)
 
     return tweets
 
