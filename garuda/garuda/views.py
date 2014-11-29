@@ -324,6 +324,10 @@ def post_tweet(request):
             query = "INSERT INTO %s (tweet_value, tags, post_time) VALUES ('%s', '%s', '%s')" % (table, tweet_value, tags, post_time)
             cursor.execute(query)
 
+            ##
+            ## Also insert the tags into the tags table , write an intelligent query which sees if tags are not there hence inserts other wise appends to a list of ids
+            ##
+
             db.commit()
             db.close()
 
@@ -345,10 +349,87 @@ def post_tweet(request):
 
     return HttpResponse(json.dumps(response),content_type = "application/json")
 
-def see_followers(request):
+@login_required
+def get_followers(request):
     # Create a html page
     # Get all the Followers, and those who follow in a tab manner
-    pass
+    user_id = request.session['user_id']
+    table = 'user_' + user_id + '_follow'
+
+    followers_list = []
+    errors = []
+
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+
+        query = "SELECT {0}.user_id, user_handle, user_name FROM {0},users WHERE {0}.user_status LIKE 'follower' AND `users`.user_id = `{0}`.user_id ".format(table) # Improve query so that we get his user details like handle , name etc.
+        cursor.execute(query)
+
+        rows = cursor.fetchall()
+
+        if rows:
+            for row in rows:
+                user_follower_id = row[0]
+                user_handle = row[1]
+                user_name = row[2]
+
+                followers_list.append({
+                        'follower_id':user_follower_id,
+                        'user_handle':user_handle,
+                        'user_name':user_name
+                    })
+
+        else:
+            pass
+
+    except MySQLdb.Error, e:
+        errors.append(str(e))
+
+    # If followers list is empty see case
+    return render(request,'followers.html',followers_list)
+
+
+@login_required
+def get_following(request):
+    # Create a html page
+    # Get all the Followers, and those who follow in a tab manner
+    user_id = request.session['user_id']
+    table = 'user_' + user_id + '_follow'
+
+    following_list = []
+    errors = []
+
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+
+        query = "SELECT {0}.user_id, user_handle, user_name FROM {0},users WHERE {0}.user_status LIKE 'following' AND `users`.user_id = `{0}`.user_id ".format(table) # Improve query so that we get his user details like handle , name etc.
+        cursor.execute(query)
+
+        rows = cursor.fetchall()
+
+        if rows:
+            for row in rows:
+                user_following_id = row[0]
+                user_handle = row[1]
+                user_name = row[2]
+
+                following_list.append({
+                        'following_id':user_following_id,
+                        'user_handle':user_handle,
+                        'user_name':user_name
+                    })
+
+        else:
+            pass
+
+    except MySQLdb.Error, e:
+        errors.append(str(e))
+
+    # If followers list is empty see case
+    return render(request,'following.html',following_list)
+
 
 # Also start create group etc, like , star
 
@@ -432,3 +513,4 @@ def add_follower(request):
         }
 
     return HttpResponse(json.dumps(response),content_type = "application/json")
+
