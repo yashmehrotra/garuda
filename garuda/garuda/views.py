@@ -347,7 +347,7 @@ def get_following_tweets(request):
     for following in user_following:
         tweets += get_user_tweets(following)
 
-    # Below is a Little Magic Trick that shows you your feed in the correct time orders
+    # Below is a Little Magic Trick that shows you your feed in the correct time orders , Also reverse is faster than splice in an average case
     tweets = sorted(tweets, key=lambda k: k['post_time'])
     tweets.reverse() 
 
