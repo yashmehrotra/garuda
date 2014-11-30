@@ -592,3 +592,46 @@ def user_page(request, user_id):
     # Intelligently add it to the urls link such that host/user redirects to this
     pass
 
+@login_required
+def my_tweets(request):
+
+    user_id = request.session['user_id']
+
+    table = 'user_' + user_id
+
+    errors = []
+
+    tweets = []
+
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+
+        query = "SELECT * FROM  {0} ".format(table)
+        cursor.execute(query)
+
+        rows = cursor.fetchall()
+        
+        if rows:
+            for row in rows:
+                pass
+            pass
+
+        else:
+            tweets = []
+
+    except MySQLdb.Error, e:
+        errors.append(str(e))
+
+    page_data = {
+        'user_id':user_id,
+        'user_handle':user_handle,
+        'tweets':tweets
+    }
+
+    return render(request,'mytweets.html',page_data)
+
+@login_required
+def view_all_users(request):
+    pass
+
