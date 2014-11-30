@@ -148,10 +148,6 @@ def signupuser(request):
         # Ethical
         user_password = hashlib.md5(user_password).hexdigest()
 
-        ##
-        ## Add a query to see if the handle and useremail both are unique , if the same exists return appropriate response 
-        ##
-        
         errors = []
 
         try:
@@ -377,12 +373,13 @@ def post_tweet(request):
             query = "INSERT INTO %s (tweet_value, tags, post_time) VALUES ('%s', '%s', '%s')" % (table, tweet_value, tags, post_time)
             cursor.execute(query)
 
-            ##
-            ## Also insert the tags into the tags table , write an intelligent query which sees if tags are not there hence inserts other wise appends to a list of ids
-            ##
+            tweet_id = cursor.lastrowid
 
             db.commit()
             db.close()
+
+            for tag in tags:
+                fill_tag_table(user_id, tag, tweet_id)
 
         except MySQLdb.Error, e:
             errors.append(str(e))
@@ -633,5 +630,47 @@ def my_tweets(request):
 
 @login_required
 def view_all_users(request):
-    pass
 
+    user_id_parent = request.session['user_id']
+
+    users_list = []
+
+    errors = []
+
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+
+        query = "SELECT * FROM users WHERE user_id != '{0}' ".format(user_id_parent)
+
+        if rows:
+            for row in rows:
+                user_id = row[0]
+                user_handle = row[1]
+                user_name = row[3]
+                
+                users_list.append({
+                    'user_id':user_id,
+                    'user_handle':user_handle,
+                    'user_name':user_name
+                })
+
+        else:
+            pass
+
+    except MySQLdb.Error, e:
+        errors.append(str(e))
+
+    page_data = {
+        'user_id':request.session['user_id'],
+        'user_handle':request.session['user_handle'],
+        'users_list':users_list
+    }
+
+    return render(request,'all.html',page_data)
+
+def fill_tag_table(user_id, tag, tweet_id):
+    ##
+    ##
+    ##
+    pass
