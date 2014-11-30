@@ -347,6 +347,10 @@ def get_following_tweets(request):
     for following in user_following:
         tweets += get_user_tweets(following)
 
+    # Below is a Little Magic Trick that shows you your feed in the correct time orders
+    tweets = sorted(tweets, key=lambda k: k['post_time'])
+    tweets.reverse() 
+
     return tweets
 
 @csrf_exempt
@@ -581,5 +585,10 @@ def add_follower(request):
 @csrf_exempt
 @login_required
 def search(request):
+    pass
+
+@login_required
+def user_page(request, user_id):
+    # Intelligently add it to the urls link such that host/user redirects to this
     pass
 
