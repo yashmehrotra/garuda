@@ -55,13 +55,14 @@ def validate_user(user_email, user_password):
                 'reason':'username password combo doesnt match'    #Change the English
             }
 
-        return response
-
     except MySQLdb.Error, e:
         errors.append(str(e))
 
     if errors:
         response.append({'error':errors})
+        return response
+
+    if not errors:
         return response
 
 def login_page(request):
@@ -145,6 +146,11 @@ def signupuser(request):
 
         # Ethical
         user_password = hashlib.md5(user_password).hexdigest()
+
+        ##
+        ## Add a query to see if the handle and useremail both are unique , if the same exists return appropriate response 
+        ##
+        
         errors = []
         
         try:
@@ -392,8 +398,8 @@ def get_followers(request):
         'followers_list':followers_list
     }
 
-    # If followers list is empty see case
-    return render(request,'followers.html',page_data)
+    if not errors:
+        return render(request,'followers.html',page_data)
 
 
 @login_required
@@ -528,4 +534,9 @@ def add_follower(request):
         }
 
     return HttpResponse(json.dumps(response),content_type = "application/json")
+
+@csrf_exempt
+@login_required
+def search_tags(request):
+    pass
 
