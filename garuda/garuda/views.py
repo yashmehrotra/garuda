@@ -152,6 +152,48 @@ def signupuser(request):
         ##
         
         errors = []
+
+        try:
+            db = getDBObject()
+            cursor = db.cursor()
+
+            query = "SELECT * FROM users WHERE user_email LIKE '%s' " % (user_email)
+
+            cursor.execute(query)
+
+            rows = cursor.fetchall()
+
+            if rows:
+                response = {
+                    'status':'failed',
+                    'reason':'email already exists'
+                }
+
+                return HttpResponse(json.dumps(response),content_type = "application/json")
+
+        except MySQLdb.Error, e:
+            errors.append(str(e))
+
+        try:
+            db = getDBObject()
+            cursor = db.cursor()
+
+            query = "SELECT * FROM users WHERE user_handle LIKE '%s' " % (user_handle)
+
+            cursor.execute(query)
+
+            rows = cursor.fetchall()
+
+            if rows:
+                response = {
+                    'status':'failed',
+                    'reason':'user handle already exists'
+                }
+
+                return HttpResponse(json.dumps(response),content_type = "application/json")
+
+        except MySQLdb.Error, e:
+            errors.append(str(e))
         
         try:
             db = getDBObject()
@@ -537,6 +579,6 @@ def add_follower(request):
 
 @csrf_exempt
 @login_required
-def search_tags(request):
+def search(request):
     pass
 
