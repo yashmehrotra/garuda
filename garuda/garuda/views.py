@@ -125,8 +125,9 @@ def logout(request):
     request.session['logged_in'] = False
     request.session.modified = True
 
-    response = 'logged out'
-    return HttpResponse(json.dumps(response),content_type = "application/json")
+    #response = 'logged out'
+    #return HttpResponse(json.dumps(response),content_type = "application/json")
+    return HttpResponseRedirect('/login')
 
 def dbms(request):
     return render(request,'dbms.html')
