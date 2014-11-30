@@ -363,7 +363,7 @@ def get_followers(request):
         db = getDBObject()
         cursor = db.cursor()
 
-        query = "SELECT {0}.user_id, user_handle, user_name FROM {0},users WHERE {0}.user_status LIKE 'follower' AND `users`.user_id = `{0}`.user_id ".format(table) # Improve query so that we get his user details like handle , name etc.
+        query = "SELECT {0}.user_id, `users`.user_handle, `users`.user_name FROM {0},users WHERE {0}.user_status LIKE 'follower' AND `users`.user_id = `{0}`.user_id ".format(table) # Improve query so that we get his user details like handle , name etc.
         cursor.execute(query)
 
         rows = cursor.fetchall()
@@ -386,6 +386,12 @@ def get_followers(request):
     except MySQLdb.Error, e:
         errors.append(str(e))
 
+    page_data = {
+        'user_handle':request.session['user_handle'],
+        'user_id':request.session['user_id'],
+        'followers_list':followers_list
+    }
+
     # If followers list is empty see case
     return render(request,'followers.html',followers_list)
 
@@ -400,11 +406,13 @@ def get_following(request):
     following_list = []
     errors = []
 
+    #pdb.set_trace()
+
     try:
         db = getDBObject()
         cursor = db.cursor()
 
-        query = "SELECT {0}.user_id, user_handle, user_name FROM {0},users WHERE {0}.user_status LIKE 'following' AND `users`.user_id = `{0}`.user_id ".format(table) # Improve query so that we get his user details like handle , name etc.
+        query = "SELECT {0}.user_id, `users`.user_handle, `users`.user_name FROM {0},users WHERE {0}.user_status LIKE 'following' AND `users`.user_id = `{0}`.user_id ".format(table) # Improve query so that we get his user details like handle , name etc.
         cursor.execute(query)
 
         rows = cursor.fetchall()
@@ -427,8 +435,15 @@ def get_following(request):
     except MySQLdb.Error, e:
         errors.append(str(e))
 
+    page_data = {
+        'user_handle':request.session['user_handle'],
+        'user_id':request.session['user_id'],
+        'following_list':following_list
+    }
+
     # If followers list is empty see case
-    return render(request,'following.html',following_list)
+    # return render(request,'home.html',user_details)
+    return render(request,'following.html',page_data)
 
 
 # Also start create group etc, like , star

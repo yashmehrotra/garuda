@@ -39,22 +39,12 @@
     </ul>
   </div>
   <h1>Welcome</h1>
-  <p>
-    Your user details are - 
-    <br>
-    Your handle is {{ user_handle }}
-    <br>
-    Your email is {{ user_email }}
-  </p>
-  <div id="tweet-container">
-      <textarea id="tweet" placeholder="Your Tweet Here ..." class="form-control" rows="4"></textarea> <!-- Make it fixed rows and columns -->
-      <button onclick="submit_form()">Submit</button>
-      <div id="user-tweets">
+  <div id="main-container">
+      <div id="users">
           <!-- A for loop which shows all the tweets of the user-->
-          {% for tweet in tweets %}
+          {% for following in following_list %}
           <p>
-            {{ tweet.tweet_value }}
-            <input type="text" placeholder="{{ tweet.post_time }}" />
+            {{ following.following_id }} has name {{ following.user_name }} and handle {{ following.user_handle }}
           </p>
           {% endfor %}
       </div>
