@@ -39,22 +39,19 @@
     </ul>
   </div>
   <h1>Welcome</h1>
-  <h2>Here are the people you follow</h2>
+  <h2>Here are your followers</h2>
   <div id="main-container">
       <div id="users">
           <!-- A for loop which shows all the tweets of the user-->
-          {% if following_list %}
-            {% for following in following_list %}
+          {% if followers_list %}
+            {% for follower in followers_list %}
             <p>
-              {{ following.following_id }} has name {{ following.user_name }} and handle {{ following.user_handle }}
+              {{ follower.follower_id }} has name {{ follower.user_name }} and handle {{ follower.user_handle }}
             </p>
             {% endfor %}
           {% else %}
-            <p>
-              Looks like you dont follow anyone
-            </p>
+            <p> Looks like no one follows you </p>
           {% endif %}
-
       </div>
   </div>
 </body>

@@ -262,7 +262,7 @@ def get_user_tweets(user_id):
 
 def get_following_tweets(request):
 
-    pdb.set_trace()
+    #pdb.set_trace()
     
     user_id = request.session['user_id']
     table = 'user_' + user_id + '_follow'
@@ -393,7 +393,7 @@ def get_followers(request):
     }
 
     # If followers list is empty see case
-    return render(request,'followers.html',followers_list)
+    return render(request,'followers.html',page_data)
 
 
 @login_required

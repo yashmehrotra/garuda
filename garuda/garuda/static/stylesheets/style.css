@@ -5,6 +5,6 @@ h1 { color:red; }
 
 #tweet { width: 400px; }
 
-.header { width:100%; background-color:red; }
+.header { width:100%; background-color:gray; }
 
 .header-list { display:block; width:400px; margin:0 auto; }
