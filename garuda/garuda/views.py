@@ -378,7 +378,7 @@ def post_tweet(request):
             db.commit()
             db.close()
 
-            for tag in tags:
+            for tag in json.loads(tags):
                 fill_tag_table(user_id, tag, tweet_id)
 
         except MySQLdb.Error, e:
@@ -733,4 +733,49 @@ def fill_tag_table(user_id, tag, tweet_id):
     ##
     ##Also insert the tags into the tags table , write an intelligent query which sees if tags are not there hence inserts other wise appends to a list of ids
     ##
-    pass
+
+    errors = []
+
+    #pdb.set_trace()
+
+    user_tweet_id = str(user_id) + '-' + str(tweet_id)
+
+    tag = str(tag)
+
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+
+        query = "SELECT tag_id,user_tweet_id FROM tags WHERE tag_value LIKE '{0}' ".format(tag)
+        cursor.execute(query)
+
+        row = cursor.fetchone()
+
+        if not row:
+            user_tweet_list = [user_tweet_id]
+            user_tweet_list = json.dumps(user_tweet_list)
+
+            query = "INSERT INTO tags (tag_value,user_tweet_id) VALUES ('%s', '%s') " % (tag, user_tweet_list)
+            cursor.execute(query)
+
+            db.commit()
+
+            db.close()
+
+        else:
+            tag_id = row[0]
+            user_tweet_id_db = row[1]
+
+            user_tweet_id_db = json.loads(user_tweet_id_db)
+            user_tweet_id_db.append(user_tweet_id)
+            user_tweet_id_db = json.dumps(user_tweet_id_db)
+
+            query = "UPDATE tags SET `user_tweet_id` = '{0}' WHERE tag_id = '{1}' ".format(user_tweet_id_db, tag_id)
+            cursor.execute(query)
+
+            db.commit()
+
+            db.close()
+
+    except MySQLdb.Error, e:
+        errors.append(str(e))
