@@ -1,10 +1,19 @@
-h1 { color:red; }
+body { background-color: #e6e6e6 !important; }
+
 .login-form { width: 380px !important;}
 
 /* Home.html */
 
+.container { width:600px !important; margin:0 auto; background-color:white; padding: 5px 20px; min-height:700px; }
+
+.container > h1 { text-align:center; }
+
 #tweet { width: 400px; }
 
-.header { width:100%; background-color:gray; }
+.header { width:100%; background-color:#efefef; padding-top: 10px; height: 40px; }
 
-.header-list { display:block; width:400px; margin:0 auto; }
+.header-list { display:block; width:550px; margin:0 auto; }
+
+.header-link { padding:5px 10px; margin: 5px 10px; }
+
+.tweet-home { display: block; width: inherit; height: 60px; margin:30px auto 0; border-top: 1px solid orange; padding: 20px 5px 0; }

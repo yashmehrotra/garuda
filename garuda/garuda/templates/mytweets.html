@@ -19,7 +19,7 @@
           console.log(result);
           if(result['status'] == 'success') {
             console.log('tweet');
-            //window.location.replace("/home/");
+            window.location.replace("/home/");
           }
         } else {
           console.log('prob with ajax request');
@@ -41,19 +41,23 @@
   </div>
   <div class="container">
   <h1>Welcome</h1>
-  <h2>Here are your followers</h2>
-  <div id="main-container">
-      <div id="users">
+  <p>
+    Your user details are - 
+    <br>
+    Your handle is {{ user_handle }}
+    <br>
+    Your email is {{ user_email }}
+  </p>
+  <div class="tweet-container">
+      <div id="user-tweets">
           <!-- A for loop which shows all the tweets of the user-->
-          {% if followers_list %}
-            {% for follower in followers_list %}
-            <p>
-              {{ follower.follower_id }} has name {{ follower.user_name }} and handle {{ follower.user_handle }}
-            </p>
-            {% endfor %}
-          {% else %}
-            <p> Looks like no one follows you </p>
-          {% endif %}
+          {% for tweet in tweets %}
+          <p class="tweet-home">
+            {{ tweet.tweet_value }}<br>
+            posted on{{ tweet.post_time }}
+          </p>
+          <br>
+          {% endfor %}
       </div>
   </div>
 </div>

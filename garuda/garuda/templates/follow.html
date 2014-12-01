@@ -1,5 +1,7 @@
 {% load static from staticfiles %}
 <!DOCTYPE HTML>
+<html>
+<head>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}stylesheets/bootstrap-min.css">
 <script type="text/javascript" src="{{ STATIC_URL }}javascripts/jquery-2.1.1.min.js"></script>
@@ -27,8 +29,10 @@
       }
     });
   }
-
 </script>
+</head>
+<body>
+<div class="container">
 <h1>Welcome</h1>
 <p>
   Your user details are - 
@@ -41,6 +45,8 @@
   <input type="text" placeholder="Enter user_id you want to follow" id="user-to-follow">
   <button onclick="submit_form()">Submit</button>
 </div>
+</div>
+</body>
 </html>
 <!--
     Each time a tweet will be posted, the page should reload,

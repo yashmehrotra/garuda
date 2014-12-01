@@ -580,7 +580,66 @@ def add_follower(request):
 @csrf_exempt
 @login_required
 def search(request):
-    pass
+    # get the search term here , search for tags and users
+    if request.method == "POST":
+
+        search_term = request.POST.get('search_term')
+
+        try:
+            db = getDBObject()
+            cursor = db.cursor()
+
+            query = "SELECT user_tweet_id FROM tags WHERE tag_value = '{0}' ".format(search_term)
+            cursor.execute(query)
+
+            row = cursor.fetchone()
+
+            if row:
+                user_tweet_id = row[0]
+            
+            else:
+                response = {
+                    'status':'success',
+                    'result':''
+                }
+
+                return HttpResponse(json.dumps(response),content_type = "application/json")
+
+            user_tweet_id = json.loads(user_tweet_id)
+
+            user_tweet_list = []
+
+            for tweet in user_tweet_id:
+                tweet = tweet.split('-')
+
+                user_id  = tweet[0]
+                tweet_id = tweet[1]
+
+                user_tweet_list.append({
+                    'tweet_id':tweet_id,
+                    'user_id':user_id
+                })
+
+            for tweet in user_tweet_list:
+                # Get details directly from the db
+                user_id = tweet['user_id']
+                tweet_id = tweet['tweet_id']
+
+                ##
+                ## Add MySQL Queries here
+                ##
+
+
+        except MySQLdb.Error, e:
+            errors.append(str(e))
+
+    else:
+        response = {
+            'status':'failed',
+            'error':'not a post request'
+        }
+
+        return HttpResponse(json.dumps(response),content_type = "application/json")
 
 @login_required
 def user_page(request, user_id):
@@ -627,6 +686,7 @@ def user_page(request, user_id):
 def my_tweets(request):
 
     user_id = request.session['user_id']
+    user_handle = request.session['user_handle']
 
     table = 'user_' + user_id
 
@@ -670,6 +730,9 @@ def my_tweets(request):
 
     except MySQLdb.Error, e:
         errors.append(str(e))
+
+    tweets = sorted(tweets, key=lambda k: k['post_time'])
+    tweets.reverse() 
 
     page_data = {
         'user_id':user_id,
