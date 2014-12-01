@@ -663,12 +663,12 @@ def search(request):
         return HttpResponse(json.dumps(response),content_type = "application/json")
 
 @login_required
-def user_page(request, user_id):
+def user_page(request, user_name):
     # Intelligently add it to the urls link such that host/user redirects to this
     user_id_parent = request.session['user_id']
     user_handle_parent = request.session['user_handle']
 
-    uer_data = {}
+    user_data = {}
 
     errors = []
     
@@ -676,7 +676,7 @@ def user_page(request, user_id):
         db = getDBObject()
         cursor = db.cursor()
 
-        query = "SELECT user_handle, user_bio, user_email FROM users WHERE user_id = '{0}' ".format(user_id)
+        query = "SELECT user_handle, user_bio, user_email, user_name, user_id FROM users WHERE user_handle = '{0}' ".format(user_name)
         cursor.execute(query)
 
         row = cursor.fetchone()
@@ -687,10 +687,13 @@ def user_page(request, user_id):
             user_handle = row[0]
             user_bio = row[1]
             user_email = row[2]
+            user_name = row[3]
+            user_id = row[4]
 
             user_data['user_handle'] = user_handle
             user_data['user_bio']    = user_bio
             user_data['email']       = user_email
+            user_data['user_name']   = user_name
 
         else:
             pass
@@ -698,7 +701,12 @@ def user_page(request, user_id):
     except MySQLdb.Error, e:
         errors.append(str(e))
 
-    user_data['tweets'] = get_user_tweets(user_id)
+    tweets_user = get_user_tweets(str(user_id))
+
+    tweets_user = sorted(tweets_user, key=lambda k: k['post_time'])
+    tweets_user.reverse()
+
+    user_data['tweets'] = tweets_user
 
     return render(request,'userpage.html',user_data)
 
@@ -886,3 +894,5 @@ def fill_tag_table(user_id, tag, tweet_id):
 
     except MySQLdb.Error, e:
         errors.append(str(e))
+
+    
