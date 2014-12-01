@@ -253,7 +253,27 @@ def get_user_tweets(user_id):
     
     table = 'user_' + user_id
 
+    #pdb.set_trace()
+
     errors = []
+
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+
+        query = "SELECT user_handle FROM users WHERE user_id = '{0}' ".format(user_id)
+        cursor.execute(query)
+
+        row = cursor.fetchone()
+
+        if row:
+            user_handle = str(row[0])
+        else:
+            # You are dead if it comes in here
+            pass
+
+    except MySQLdb.Error, e:
+        errors.append(str(e))
 
     tweets = []
 
@@ -283,7 +303,8 @@ def get_user_tweets(user_id):
                     'tweet_value':tweet_value,
                     'stars':len(starred_by),          # Fix
                     'tags':json.loads(tags),
-                    'post_time':post_time
+                    'post_time':post_time,
+                    'posted_by':user_handle
                 })
 
         else:
@@ -751,6 +772,26 @@ def view_all_users(request):
 
     errors = []
 
+    table = 'user_' + user_id_parent + '_follow'
+
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+
+        query = "SELECT user_id FROM {0} WHERE user_status LIKE 'following' ".format(table)
+        cursor.execute(query)
+
+        rows = cursor.fetchall()
+
+        users_following = []
+
+        if rows:
+            for row in rows:
+                users_following.append(str(row[0]))
+
+    except MySQLdb.Error, e:
+        errors.append(str(e))
+
     try:
         db = getDBObject()
         cursor = db.cursor()
@@ -767,11 +808,19 @@ def view_all_users(request):
                 user_id = row[0]
                 user_handle = row[1]
                 user_name = row[3]
+
+                if str(user_id) in users_following:
+                    follow = True
+                else:
+                    follow = False
+
+                #pdb.set_trace()
                 
                 users_list.append({
                     'user_id':user_id,
                     'user_handle':user_handle,
-                    'user_name':user_name
+                    'user_name':user_name,
+                    'follow':follow
                 })
 
         else:
@@ -780,10 +829,12 @@ def view_all_users(request):
     except MySQLdb.Error, e:
         errors.append(str(e))
 
+    #pdb.set_trace()
+
     page_data = {
         'user_id':request.session['user_id'],
         'user_handle':request.session['user_handle'],
-        'users_list':users_list
+        'users':users_list
     }
 
     return render(request,'all.html',page_data)

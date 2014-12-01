@@ -29,26 +29,12 @@
   }
 
 </script>
+<title>Garuda</title>
 <body>
-  <div class="header">
-    <ul class="header-list" style="margin-left:440px; display:inline-block;">
-      <a href="/home/" class="header-link">Home</a>
-      <a href="/followers/" class="header-link">My Followers</a>
-      <a href="/following/" class="header-link">Following</a>
-      <a href="/mytweets/" class="header-link">My Tweets</a>
-    </ul>
-    <a href="#" style="margin-left:200px; display:inline-block; color:green;">{{ user_handle }}</a>
-    <a href="/logout/" style="margin-left:20px; display:inline-block;">Logout</a>
-  </div>
+  {% include "header.html" %}
   <div class="container">
-    <h1 >Welcome</h1>
-    <p>
-      Your user details are - 
-      <br>
-      Your handle is {{ user_handle }}
-      <br>
-      Your email is {{ user_email }}
-    </p>
+    <h1 style="color:green;">Welcome to Garuda</h1>
+    <br><br><br><br>
     <div class="tweet-container">
         <textarea id="tweet" placeholder="Your Tweet Here ..." class="form-control" rows="4" style="width:550px;"></textarea> <!-- Make it fixed rows and columns -->
         <button onclick="submit_form()" class="btn btn-success" style="margin: 0 auto; display:block; margin-top: 5px;">Submit</button>
@@ -56,8 +42,8 @@
             <!-- A for loop which shows all the tweets of the user-->
             {% for tweet in tweets %}
             <p class="tweet-home">
-              {{ tweet.tweet_value }}<br>
-              posted on{{ tweet.post_time }}
+              {{ tweet.tweet_value }}<br><br>
+              by <a href="#">{{ tweet.posted_by }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ tweet.post_time }}<br>
             </p>
             <br>
             {% endfor %}

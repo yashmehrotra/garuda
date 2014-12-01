@@ -30,31 +30,17 @@
 
 </script>
 <body>
-  <div class="header">
-    <ul class="header-list">
-      <a href="/home/" class="header-link">Home</a>
-      <a href="/followers/" class="header-link">My Followers</a>
-      <a href="/following/" class="header-link">Following</a>
-      <a href="/mytweets/" class="header-link">My Tweets</a>
-      <a href="/logout/" class="header-link">Logout</a>
-    </ul>
-  </div>
+  <title>Garuda</title>
+  {% include "header.html" %}
   <div class="container">
-  <h1>Welcome</h1>
-  <p>
-    Your user details are - 
-    <br>
-    Your handle is {{ user_handle }}
-    <br>
-    Your email is {{ user_email }}
-  </p>
+  <h1>My Tweets</h1>
   <div class="tweet-container">
       <div id="user-tweets">
           <!-- A for loop which shows all the tweets of the user-->
           {% for tweet in tweets %}
           <p class="tweet-home">
             {{ tweet.tweet_value }}<br>
-            posted on{{ tweet.post_time }}
+            posted on {{ tweet.post_time }}
           </p>
           <br>
           {% endfor %}

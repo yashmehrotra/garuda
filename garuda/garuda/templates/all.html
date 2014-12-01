@@ -5,21 +5,21 @@
 <script type="text/javascript" src="{{ STATIC_URL }}javascripts/jquery-2.1.1.min.js"></script>
 <script type="text/javascript">
   
-  function submit_form () {
+  function submit_form (user_id) {
     console.log("Form Submitted");
+    console.log(user_id);
     
     $.ajax({
       type:"POST",
       url:"/post_tweet/",
       data:{
-        'tweet_value':$('#tweet').val()
+        'user_to_follow':$('#tweet').val()
       },
       success: function(result) {
         if(result) {
           console.log(result);
           if(result['status'] == 'success') {
-            console.log('tweet');
-            window.location.replace("/home/");
+            //$("'#"+user_id+"'").css('color':'red'); // Change Color
           }
         } else {
           console.log('prob with ajax request');
@@ -30,35 +30,26 @@
 
 </script>
 <body>
-  <div class="header">
-    <ul class="header-list">
-      <a href="/home/" class="header-link">Home</a>
-      <a href="/followers/" class="header-link">My Followers</a>
-      <a href="/following/" class="header-link">Following</a>
-      <a href="/mytweets/" class="header-link">My Tweets</a>
-      <a href="/logout/" class="header-link">Logout</a>
-    </ul>
-  </div>
+  <title>Garuda</title>
+{% include "header.html" %}
   <div  class="container">
   <h1>Welcome</h1>
   <p>
     Your user details are - 
     <br>
     Your handle is {{ user_handle }}
-    <br>
-    Your email is {{ user_email }}
   </p>
-  <div id="tweet-container">
-      <div id="user-tweets">
-          <!-- A for loop which shows all the tweets of the user-->
-          {% for tweet in tweets %}
-          <p>
-            {{ tweet.tweet_value }}<br>
-            posted on{{ tweet.post_time }}
-          </p>
-          <br>
-          {% endfor %}
+  <div class="users">
+    {% for user in users %}
+        <div>
+          {{ user.user_handle }} - {{ user.user_name }} - 
+          {% if user.follow %}
+          <button id="{{ user.user_id }}"onclick="submit_form(this.id)" class="btn btn-success" style="background-color:gray" disabled>Followed</button>
+          {% else %}
+          <button id="{{ user.user_id }}"onclick="submit_form(this.id)" class="btn btn-success">Follow</button>
+          {% endif %}
       </div>
+    {% endfor %}
   </div>
 </div>
 </body>
