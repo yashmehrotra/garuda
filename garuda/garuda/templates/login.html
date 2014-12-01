@@ -45,12 +45,12 @@
   <!-- ADD E.PREVENT DEFAULT STUFF AND REVERT IT BACK AS
   A FORM  -->
     {% csrf_token %}
-    <input type="email" name="user_email" placeholder="Email" class="form-group has-success has-feedback form-control login-form" id="user-email">
-    <input type="password" name="user_password" placeholder="Password" class="form-group has-success has-feedback form-control login-form" id="user-password">
-    <button class="btn btn-success" style="margin: 0 auto; display:block; margin-top: 5px; text-align:center; " onclick="submit_form()">Submit</button>
+    <input type="email" name="user_email" placeholder="Email" class="form-group has-success has-feedback form-control login-form" id="user-email" style="margin-left:90px;">
+    <input type="password" name="user_password" placeholder="Password" class="form-group has-success has-feedback form-control login-form" id="user-password" style="margin-left:90px;">
+    <button class="btn btn-success" style="text-align:center; margin-left:260px;" onclick="submit_form()">Submit</button>
   <!-- </form> -->
   <div id='signup'>
-    <button><a href="/signup" class="btn btn-success" style="margin: 0 auto; display:block; margin-top: 5px; background-color:blue;">Click Here</a></button> to sign up!
+    <button class="btn btn-warning" onclick="location.href='/signup'">Click Here to sign up!</button>
   </div>
 </div>
 </body>

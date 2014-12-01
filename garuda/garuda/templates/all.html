@@ -43,12 +43,12 @@
   </p>
   <div class="users">
     {% for user in users %}
-        <div>
+        <div class="tweet-home">
           <a href="/user/{{ user.user_handle }}/">{{ user.user_handle}}</a> {{ user.user_name }} - 
           {% if user.follow %}
-          <button id="{{ user.user_id }}"onclick="submit_form(this.id)" class="btn btn-success" style="background-color:gray" disabled>Followed</button>
+          <button id="{{ user.user_id }}" onclick="submit_form(this.id)" class="btn btn-success" id="disabled-btn" style="background-color:gray !important; margin-left:5px; margin-top:-3px;" disabled>Followed</button>
           {% else %}
-          <button id="{{ user.user_id }}"onclick="submit_form(this.id)" class="btn btn-success">Follow</button>
+          <button id="{{ user.user_id }}" onclick="submit_form(this.id)" class="btn btn-success">Follow</button>
           {% endif %}
       </div>
     {% endfor %}

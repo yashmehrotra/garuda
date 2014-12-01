@@ -17,3 +17,5 @@ body { background-color: #e6e6e6 !important; }
 .header-link { padding:5px 10px; margin: 5px 10px; }
 
 .tweet-home { display: block; width: inherit; height: 60px; margin:30px auto 0; border-top: 1px solid orange; padding: 20px 5px 0; }
+
+.btn { margin: 15px 0 0 220px; display:block; outline:0 !important; border:0 !important; padding: 10px 18px !important; }
