@@ -296,10 +296,6 @@ def get_user_tweets(user_id):
         errors.append(e)
 
 
-    #for row in rows:
-        # get tweets here
-        #pass
-
     # get all the users that the parent follows
     # append them to the user's tweet list -- seperate user's tweet from the tweet feed
 
