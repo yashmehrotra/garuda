@@ -730,9 +730,6 @@ def view_all_users(request):
     return render(request,'all.html',page_data)
 
 def fill_tag_table(user_id, tag, tweet_id):
-    ##
-    ##Also insert the tags into the tags table , write an intelligent query which sees if tags are not there hence inserts other wise appends to a list of ids
-    ##
 
     errors = []
 
