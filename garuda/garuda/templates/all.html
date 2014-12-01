@@ -11,15 +11,17 @@
     
     $.ajax({
       type:"POST",
-      url:"/post_tweet/",
+      url:"/add_follower/",
       data:{
-        'user_to_follow':$('#tweet').val()
+        'user_to_follow':user_id
       },
       success: function(result) {
         if(result) {
           console.log(result);
           if(result['status'] == 'success') {
             //$("'#"+user_id+"'").css('color':'red'); // Change Color
+            console.log('followed');
+            window.location.replace("/all/");
           }
         } else {
           console.log('prob with ajax request');
