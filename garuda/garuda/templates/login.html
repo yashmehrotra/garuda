@@ -36,17 +36,21 @@
 </script>
 <body>
   <div class="container">
-  <h1>Please Enter you details</h1>
+  <h1>Welcome to Garuda</h1>
+  <h3 style="text-align:center;">Please Enter your Details</h3>
+  <br>
+  <br>
+  <br>
   <!-- <form  method="post"> -->
   <!-- ADD E.PREVENT DEFAULT STUFF AND REVERT IT BACK AS
   A FORM  -->
     {% csrf_token %}
     <input type="email" name="user_email" placeholder="Email" class="form-group has-success has-feedback form-control login-form" id="user-email">
     <input type="password" name="user_password" placeholder="Password" class="form-group has-success has-feedback form-control login-form" id="user-password">
-    <button onclick="submit_form()">Submit</button>
+    <button class="btn btn-success" style="margin: 0 auto; display:block; margin-top: 5px; text-align:center; " onclick="submit_form()">Submit</button>
   <!-- </form> -->
   <div id='signup'>
-    <button><a href="/signup">Click Here</a></button> to sign up!
+    <button><a href="/signup" class="btn btn-success" style="margin: 0 auto; display:block; margin-top: 5px; background-color:blue;">Click Here</a></button> to sign up!
   </div>
 </div>
 </body>

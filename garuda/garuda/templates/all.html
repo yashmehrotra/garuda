@@ -44,7 +44,7 @@
   <div class="users">
     {% for user in users %}
         <div>
-          {{ user.user_handle }} - {{ user.user_name }} - 
+          <a href="/user/{{ user.user_handle }}/">{{ user.user_handle}}</a> {{ user.user_name }} - 
           {% if user.follow %}
           <button id="{{ user.user_id }}"onclick="submit_form(this.id)" class="btn btn-success" style="background-color:gray" disabled>Followed</button>
           {% else %}

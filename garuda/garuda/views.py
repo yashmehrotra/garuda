@@ -600,11 +600,11 @@ def add_follower(request):
 
 @csrf_exempt
 @login_required
-def search(request):
+def search(request,search_term):
     # get the search term here , search for tags and users
-    if request.method == "POST":
+    if True:
 
-        search_term = request.POST.get('search_term')
+        #search_term = request.POST.get('search_term')
 
         try:
             db = getDBObject()
@@ -621,7 +621,7 @@ def search(request):
             else:
                 response = {
                     'status':'success',
-                    'result':''
+                    'result':'no term'
                 }
 
                 return HttpResponse(json.dumps(response),content_type = "application/json")
@@ -641,14 +641,60 @@ def search(request):
                     'user_id':user_id
                 })
 
+            all_tweets = []
+
             for tweet in user_tweet_list:
                 # Get details directly from the db
                 user_id = tweet['user_id']
                 tweet_id = tweet['tweet_id']
 
+                table_tweet = 'user_' + str(user_id)
+
                 ##
-                ## Add MySQL Queries here
+                ## Add MySQL Queries here 
                 ##
+                try:
+                    db = getDBObject()
+                    cursor = db.cursor()
+
+                    query = "SELECT tweet_value,post_time FROM {0} WHERE tweet_id = '{1}' ".format(table_tweet, tweet_id)
+                    cursor.execute(query)
+
+                    row = cursor.fetchone()
+
+                    if row:
+                        tweet_value = row[0]
+                        post_time = row[1]
+
+                    query = "SELECT user_handle FROM users WHERE user_id = '{0}' ".format(user_id)
+                    cursor.execute(query)
+
+                    row2 = cursor.fetchone()
+
+                    if row2:
+                        user_handle = row2[0]
+
+                    all_tweets.append({
+                            'user_id':user_id,
+                            'user_handle':user_handle,
+                            'tweet':tweet_value,
+                            'post_time':post_time
+                        })
+
+                except MySQLdb.Error, e:
+                    errors.append(str(e))
+
+            all_tweets = sorted(all_tweets, key=lambda k: k['post_time'])
+            all_tweets.reverse()
+
+            page_data = {
+                'user_id':request.session['user_id'],
+                'user_handle':request.session['user_handle'],
+                'tweets':all_tweets,
+                'search_term':search_term
+            }
+
+            return render(request,'search.html',page_data)
 
 
         except MySQLdb.Error, e:
@@ -690,10 +736,10 @@ def user_page(request, user_name):
             user_name = row[3]
             user_id = row[4]
 
-            user_data['user_handle'] = user_handle
-            user_data['user_bio']    = user_bio
-            user_data['email']       = user_email
-            user_data['user_name']   = user_name
+            user_data['user_handle_p'] = user_handle
+            user_data['user_bio_p']    = user_bio
+            user_data['email_p']       = user_email
+            user_data['user_name_p']   = user_name
 
         else:
             pass
@@ -707,6 +753,8 @@ def user_page(request, user_name):
     tweets_user.reverse()
 
     user_data['tweets'] = tweets_user
+    user_data['user_id'] = request.session['user_id']
+    user_data['user_handle'] = request.session['user_handle']
 
     return render(request,'userpage.html',user_data)
 
@@ -895,4 +943,7 @@ def fill_tag_table(user_id, tag, tweet_id):
     except MySQLdb.Error, e:
         errors.append(str(e))
 
+
+def dosearch(request):
+    return render(request,'dosearch.html')
     

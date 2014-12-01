@@ -8,41 +8,21 @@
   function submit_form () {
     console.log("Form Submitted");
     
-    $.ajax({
-      type:"POST",
-      url:"/post_tweet/",
-      data:{
-        'tweet_value':$('#tweet').val()
-      },
-      success: function(result) {
-        if(result) {
-          console.log(result);
-          if(result['status'] == 'success') {
-            console.log('tweet');
-            window.location.replace("/home/");
-          }
-        } else {
-          console.log('prob with ajax request');
-        }
-      }
-    });
-  }
 
 </script>
 <body>
   <title>Garuda</title>
   {% include "header.html" %}
   <div class="container">
-  <h1>{{ user_name_p }}'s Tweets</h1>
-  <h3>{{ user_bio_p }}</h3>
+  <h1>{{ search_term }}</h1>
   <div class="tweet-container">
       <div id="user-tweets">
           <!-- A for loop which shows all the tweets of the user-->
           {% if tweets %}
             {% for tweet in tweets %}
             <p class="tweet-home">
-              {{ tweet.tweet_value }}<br>
-              posted on {{ tweet.post_time }}
+            {{ tweet.tweet }}<br><br>
+              by <a href="#">{{ tweet.user_handle }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ tweet.post_time }}<br>
             </p>
             <br>
             {% endfor %}
