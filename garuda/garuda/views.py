@@ -467,6 +467,8 @@ def get_following(request):
 
         rows = cursor.fetchall()
 
+        db.close()
+
         if rows:
             for row in rows:
                 user_following_id = row[0]
@@ -587,7 +589,43 @@ def search(request):
 @login_required
 def user_page(request, user_id):
     # Intelligently add it to the urls link such that host/user redirects to this
-    pass
+    user_id_parent = request.session['user_id']
+    user_handle_parent = request.session['user_handle']
+
+    uer_data = {}
+
+    errors = []
+    
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+
+        query = "SELECT user_handle, user_bio, user_email FROM users WHERE user_id = '{0}' ".format(user_id)
+        cursor.execute(query)
+
+        row = cursor.fetchone()
+
+        db.close()
+
+        if row:
+            user_handle = row[0]
+            user_bio = row[1]
+            user_email = row[2]
+
+            user_data['user_handle'] = user_handle
+            user_data['user_bio']    = user_bio
+            user_data['email']       = user_email
+
+        else:
+            pass
+
+    except MySQLdb.Error, e:
+        errors.append(str(e))
+
+    user_data['tweets'] = get_user_tweets(user_id)
+
+    return render(request,'userpage.html',user_data)
+
 
 @login_required
 def my_tweets(request):
@@ -608,14 +646,31 @@ def my_tweets(request):
         cursor.execute(query)
 
         rows = cursor.fetchall()
+
+        db.close()
         
         if rows:
             for row in rows:
-                pass
-            pass
+                tweet_id    = row[0]
+                tweet_value = row[1]
+                starred_by  = row[2]
+                tags        = row[3]
+                post_time   = row[4]
+
+                if not starred_by:
+                    starred_by = ''
+
+                tweets.append({
+                    'tweet_id':tweet_id,
+                    'tweet_value':tweet_value,
+                    'stars':len(starred_by),          # Fix
+                    'tags':json.loads(tags),
+                    'post_time':post_time
+                })
 
         else:
-            tweets = []
+            # No rows return empty set
+            pass
 
     except MySQLdb.Error, e:
         errors.append(str(e))
@@ -642,6 +697,11 @@ def view_all_users(request):
         cursor = db.cursor()
 
         query = "SELECT * FROM users WHERE user_id != '{0}' ".format(user_id_parent)
+        cursor.execute(query)
+
+        rows = cursor.fetchall()
+
+        db.close()
 
         if rows:
             for row in rows:
