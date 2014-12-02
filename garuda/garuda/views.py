@@ -535,7 +535,7 @@ def create_user_table(user_id):
         # For creating user table followers
         user_follow = user_id + '_follow'
         
-        query = "CREATE TABLE IF NOT EXISTS {0} (`user_id` int(200) NOT NULL,`user_status` varchar(200) NOT NULL COMMENT 'follower - following our parent/following - our parent following the user', PRIMARY KEY (`user_id`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;".format(user_follow)
+        query = "CREATE TABLE IF NOT EXISTS {0} (`user_id` int(200) NOT NULL,`user_status` varchar(200) NOT NULL COMMENT 'follower - following our parent/following - our parent following the user' ) ENGINE=InnoDB DEFAULT CHARSET=latin1;".format(user_follow)
         cursor.execute(query)
 
         db.commit()
