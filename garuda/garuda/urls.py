@@ -24,6 +24,8 @@ urlpatterns = patterns('garuda.views',
     url(r'^login/','login_page'),
     url(r'^loginuser/','login_user'),
     url(r'^home/','home_page'),
+    url(r'^remove_following/','remove_following'),
+    url(r'^delete_user/','delete_user'),
     url(r'^dosearch/','dosearch'),
     url(r'^logout/','logout'),
     url(r'^dbms/','dbms'), # For Project Purposes

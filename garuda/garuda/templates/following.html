@@ -40,9 +40,10 @@
           <!-- A for loop which shows all the tweets of the user-->
           {% if following_list %}
             {% for following in following_list %}
-            <p>
-              {{ following.following_id }} has name {{ following.user_name }} and handle {{ following.user_handle }}
-            </p>
+            <div class="tweet-home">
+              <a href="/user/{{ following.user_handle }}/">{{ following.user_handle}}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ==>&nbsp;&nbsp;&nbsp;{{ following.user_name }}
+            </div>
+            
             {% endfor %}
           {% else %}
             <p>

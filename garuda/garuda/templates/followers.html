@@ -35,14 +35,11 @@
   <div class="container">
   <h1>Welcome</h1>
   <h2>Here are your followers</h2>
-  <div id="main-container">
-      <div id="users">
-          <!-- A for loop which shows all the tweets of the user-->
           {% if followers_list %}
             {% for follower in followers_list %}
-            <p>
-              {{ follower.follower_id }} has name {{ follower.user_name }} and handle {{ follower.user_handle }}
-            </p>
+            <div class="tweet-home">
+          <a href="/user/{{ follower.user_handle }}/">{{ follower.user_handle}}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ==>&nbsp;&nbsp;&nbsp;{{ follower.user_name }}
+      </div>
             {% endfor %}
           {% else %}
             <p> Looks like no one follows you </p>

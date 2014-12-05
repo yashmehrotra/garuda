@@ -946,4 +946,36 @@ def fill_tag_table(user_id, tag, tweet_id):
 
 def dosearch(request):
     return render(request,'dosearch.html')
+
+def remove_following(request,user_id):
+
+    user_id_parent = request.session['user_id']
+
+    user_id = str(user_id)
+
+    errors = {}
+
+    table_parent = "user_" + user_id_parent + "_follow"
+    table = "user_" + user_id + "_follow"
+
+    try:
+        db = getDBObject()
+        cursor = db.cursor()
+
+        query = "DELETE FROM {0} WHERE user_status = 'following' AND user_id = '{1}' ".format(table_parent,user_id_parent)
+        cursor.execute(query)
+
+        query = "DELETE FROM {0} WHERE user_status = 'follower' AND user_id = '{1}' ".format(table,user_id)
+        cursor.execute(query)
+
+        db.commit()
+        db.close()
+
+    except MySQLdb.Error, e:
+        errors.append(str(e))
+
+    ##
+    ## Add this to urls and templates
+    ##
     
+    pass
