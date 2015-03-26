@@ -26,7 +26,7 @@ def test(request):
     return HttpResponse(json.dumps(response),content_type = "application/json")
 
 def getDBObject():
-    db = MySQLdb.connect(MYSQL_HOST,MYSQL_USERNAME,MYSQL_PASSWORD,'test')
+    db = MySQLdb.connect(MYSQL_HOST,MYSQL_USERNAME,MYSQL_PASSWORD,MYSQL_DATABASE)
     return db
 
 def validate_user(user_email, user_password):
