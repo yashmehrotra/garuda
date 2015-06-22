@@ -7,7 +7,7 @@ USE garuda;
 
 CREATE TABLE users ( 
     user_id int PRIMARY KEY AUTO_INCREMENT,
-	user_email varchar(500),
+    user_email varchar(500),
     user_name varchar(500),
     user_password varchar(500),
     user_handle varchar(500),
