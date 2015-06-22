@@ -1,5 +1,0 @@
-// TO-DO ADD MYSQL DUMP HERE
-
-- users ( user_id, user_email,user_name,user_password,user_handle,user_bio)
-- tags ( tag_id, tag_value,user_tweet_id)
-- The other tables will generated automatically
